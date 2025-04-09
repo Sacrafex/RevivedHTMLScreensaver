@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DVD Screensaver Simulator</title>
+  <style>
+    body {
+      background: #000;
+      color: #0f0;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      overflow: hidden;
+    }
+    
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      text-shadow: 0 0 5px #0f0;
+      animation: glow 1.5s ease-in-out infinite alternate;
+    }
+    
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #0f0; }
+      to { text-shadow: 0 0 10px #0f0, 0 0 20px #0f0; }
+    }
+    
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background: #000;
+      color: #0f0;
+      border: 2px solid #0f0;
+      font-family: 'Courier New', monospace;
+      transition: all 0.3s;
+    }
+    
+    button:hover {
+      background: #0f0;
+      color: #000;
+      box-shadow: 0 0 10px #0f0;
+    }
+    
+    .retro-border {
+      border: 2px solid #0f0;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+    }
+    
+    .blink {
+      animation: blink 1s step-end infinite;
+    }
+    
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="retro-border">
+    <h1>DVD SCREENSAVER SIMULATOR</h1>
+    <p>Revamp of DVD Screensaver</p>
+    <button onclick="launchDVD()">LAUNCH DVD WINDOW<span class="blink">_</span></button>
+    <p>Press button multiple times for more bouncing windows</p>
+  </div>
+
+  <script>
+    const windows = [];
+    const colors = [
+      '#0f0', '#f0f', '#0ff', '#ff0',
+      '#f00', '#00f', '#f80', '#8f0'
+    ];
+
+    function getRandomColor() {
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function launchDVD() {
+      const width = 150;
+      const height = 100;
+      const screenW = screen.availWidth;
+      const screenH = screen.availHeight;
+      const posX = Math.floor(Math.random() * (screenW - width));
+      const posY = Math.floor(Math.random() * (screenH - height));
+      const bgColor = getRandomColor();
+      const textColor = bgColor === '#000' ? '#0f0' : '#000';
+
+      const dvdCode = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>DVD</title>
+          <style>
+            body {
+              margin: 0;
+              background: ${bgColor};
+              overflow: hidden;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              font-family: 'Courier New', monospace;
+            }
+            .dvd-text {
+              color: ${textColor};
+              font-weight: bold;
+              font-size: 24px;
+              text-align: center;
+              text-transform: uppercase;
+            }
+            .corner {
+              position: absolute;
+              font-size: 10px;
+              color: ${textColor};
+            }
+            .tl { top: 2px; left: 2px; }
+            .tr { top: 2px; right: 2px; }
+            .bl { bottom: 2px; left: 2px; }
+            .br { bottom: 2px; right: 2px; }
+          </style>
+        </head>
+        <body>
+          <div class="corner tl">◢</div>
+          <div class="corner tr">◣</div>
+          <div class="corner bl">◥</div>
+          <div class="corner br">◤</div>
+          <div class="dvd-text">DVD</div>
+          <script>
+            let x = window.screenX;
+            let y = window.screenY;
+            let dx = 3 + Math.random() * 3;
+            let dy = 3 + Math.random() * 3;
+            const colors = ${JSON.stringify(colors)};
+            
+            const move = () => {
+              const screenW = screen.availWidth;
+              const screenH = screen.availHeight;
+              const w = window.outerWidth;
+              const h = window.outerHeight;
+              x += dx;
+              y += dy;
+              
+              if (x + w >= screenW || x <= 0) {
+                dx = -dx;
+                const newColor = colors[Math.floor(Math.random() * colors.length)];
+                document.body.style.background = newColor;
+                document.querySelector('.dvd-text').style.color = newColor === '#000' ? '#0f0' : '#000';
+                document.querySelectorAll('.corner').forEach(el => {
+                  el.style.color = newColor === '#000' ? '#0f0' : '#000';
+                });
+              }
+              if (y + h >= screenH || y <= 0) {
+                dy = -dy;
+                const newColor = colors[Math.floor(Math.random() * colors.length)];
+                document.body.style.background = newColor;
+                document.querySelector('.dvd-text').style.color = newColor === '#000' ? '#0f0' : '#000';
+                document.querySelectorAll('.corner').forEach(el => {
+                  el.style.color = newColor === '#000' ? '#0f0' : '#000';
+                });
+              }
+              window.moveTo(x, y);
+            };
+            setInterval(move, 50);
+          <\/script>
+        </body>
+        </html>
+      `;
+
+      const newWin = window.open(
+        '',
+        '',
+        `width=${width},height=${height},left=${posX},top=${posY}`
+      );
+
+      newWin.document.write(dvdCode);
+      newWin.document.close();
+
+      windows.push(newWin);
+    }
+
+    window.addEventListener("beforeunload", () => {
+      windows.forEach(w => w.close());
+    });
+  </script>
+</body>
+</html>
