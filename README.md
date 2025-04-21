@@ -22,7 +22,7 @@ A nostalgic text-only simulation of the classic DVD logo screensaver
 
 - Vanilla JavaScript
 - HTML5
-- CSS3 (with retro styling)
+- CSS (with retro styling)
 
 ## Why I Made This
 
