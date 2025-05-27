@@ -18,6 +18,8 @@ A nostalgic text-only simulation of the classic DVD logo screensaver
 3. Click "LAUNCH DVD WINDOW" to create bouncing windows
 4. Click multiple times for more windows
 
+You can also just go [here](https://sacrafex.github.io/RevivedHTMLScreensaver/).
+
 ## Technologies
 
 - Vanilla JavaScript
